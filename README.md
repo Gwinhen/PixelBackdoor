@@ -2,6 +2,8 @@
 
 This is the implementation for CVPR 2022 paper "Better Trigger Inversion Optimization in Backdoor Scanning".
 
+The PyTorch version is coming up soon...
+
 ## Prerequisite
 
 * Keras 2.3.0
