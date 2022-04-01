@@ -17,8 +17,8 @@ class PixelBackdoor:
                  batch_size=32,         # batch size in trigger inversion
                  asr_bound=0.9,         # threshold for attack success rate
                  init_cost=1e-3,        # weight on trigger size loss
-                 learning_rate=1e-1,    # learning rate of trigger inversion
-                 clip_max=255.,         # maximum pixel value
+                 lr=1e-1,               # learning rate of trigger inversion
+                 clip_max=255.0,        # maximum pixel value
                  use_tanh=False,        # use tanh on input variables
                  augment=False          # use data augmentation on inputs
         ):
@@ -74,16 +74,16 @@ class PixelBackdoor:
         loss_ce  = keras.losses.categorical_crossentropy(output_adv, output_tru)
 
         # loss for the number of perturbed pixels
-        mask_pos = K.max(K.tanh(self.pattern_pos_var / 10)\
+        reg_pos  = K.max(K.tanh(self.pattern_pos_var / 10)\
+                             / (2 - K.epsilon()) + 0.5, axis=2)
+        reg_neg  = K.max(K.tanh(self.pattern_neg_var / 10)\
                             / (2 - K.epsilon()) + 0.5, axis=2)
-        mask_neg = K.max(K.tanh(self.pattern_neg_var / 10)\
-                            / (2 - K.epsilon()) + 0.5, axis=2)
-        loss_reg = K.sum(mask_pos) + K.sum(mask_neg)
+        loss_reg = K.sum(reg_pos) + K.sum(reg_neg)
 
         # total loss
         loss = loss_ce + loss_reg * self.cost_var
 
-        self.optimizer = optimizers.Adam(lr=learning_rate,
+        self.optimizer = optimizers.Adam(lr=lr,
                                          beta_1=0.5,
                                          beta_2=0.9)
         # parameters to optimize
@@ -193,7 +193,7 @@ class PixelBackdoor:
             avg_acc      = np.mean(acc_list)
 
             # remove small pattern values
-            threshold = self.clip_max / 255.
+            threshold = self.clip_max / 255.0
             pattern_pos_cur = K.eval(self.pattern_pos)
             pattern_neg_cur = K.eval(self.pattern_neg)
             pattern_pos_cur[(pattern_pos_cur < threshold)\

@@ -81,7 +81,7 @@ def get_data(loader, source, size=100):
     y_data = keras.utils.to_categorical(y_data, args.num_classes)
     print('data:', x_data.shape, y_data.shape)
 
-    return x_data, y_dat
+    return x_data, y_data
 
 
 def test():
@@ -137,14 +137,13 @@ def evaluate():
                                 y_val,
                                 attack_size=args.attack_size)
 
-    size = np.count_nonzero(np.sum(np.abs(pattern), axis=2))
-
     time_end = time.time()
     print('='*50)
     print('Generation time: {:.4f} m'.format((time_end - time_start) / 60))
     print('='*50)
 
     np.save(f'trigger/pattern_{source}-{target}', pattern)
+    size = np.count_nonzero(np.sum(np.abs(pattern), axis=2))
     print('trigger size:  ', size)
 
     # load data from ImageNet data generator
