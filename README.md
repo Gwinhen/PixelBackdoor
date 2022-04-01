@@ -1,14 +1,22 @@
-# PixelBackdoor
+# Better Trigger Inversion Optimization in Backdoor Scanning
 
-This is the implementation for CVPR 2022 paper "Better Trigger Inversion Optimization in Backdoor Scanning".
+This is the implementation for CVPR 2022 Oral paper "Better Trigger Inversion Optimization in Backdoor Scanning".
 
-The PyTorch version is coming up soon...
+The code is based on and inspired by [Neural Cleanse](https://github.com/bolunwang/backdoor).
 
 ## Prerequisite
+
+The code is implemented and tested on Keras with TensorFlow backend and PyTorch. It runs on Python 3.6.9.
+
+### Keras Version
 
 * Keras 2.3.0
 * Tensorflow 1.14.0
 * Tensorpack 0.9.8 (if load data using data generator)
+
+### PyTorch Version
+
+* PyTorch 1.7.0
 
 ## Usage
 
